@@ -6,10 +6,9 @@ import json
 import requests
 
 
-#  curl -XPUT -H "Content-Type: application/json" http://:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
-
+# curl -XPUT -H "Content-Type: application/json" http://:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+#now_timestamp-timePeriod
 es=Elasticsearch([{'host':'192.168.1.210','port':9200}])
-
 
 timePeriod=10*60*1000
 now_timestamp=int(round(time.time() * 1000))
@@ -21,7 +20,7 @@ body={
                 {
                     "range": {
                         "utcTime": {
-                            "gte": now_timestamp-timePeriod,
+                            "gte": 0,
                             "lt": now_timestamp
                         }
                     }
@@ -37,14 +36,12 @@ body={
     "aggs": {}
 }
 
-print(body)
 
-result=es.search(index='cars',body=body)
 
-carsArray=result['hits']['hits']
-actions=[]
-for car in carsArray:
-    print( car['_source'])
+def selectEsData():
+    result=es.search(index='cars',body=body)
+    carsArray=result['hits']['hits']
+    return carsArray
 
 
 
